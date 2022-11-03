@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 
 
 class Service(Base):
-    id = models.IntegerField(primary_key=True, null=False, blank=False)
+    id = models.AutoField(primary_key=True, null=False, blank=False)
     company = models.ForeignKey(Company, verbose_name='Hospital', on_delete=models.CASCADE, blank=False, null=False)
     name = models.CharField('Nome', max_length=200, blank=False, null=False)
     description = models.CharField('Descrição', max_length=1000, blank=False, null=False)
@@ -18,7 +18,7 @@ class Service(Base):
 
 
 class Unity(Base):
-    id = models.IntegerField(primary_key=True, null=False, blank=False)
+    id = models.AutoField(primary_key=True, null=False, blank=False)
     service = models.ForeignKey(Service, verbose_name='Serviço', on_delete=models.CASCADE, blank=False, null=False)
     name = models.CharField('Nome', max_length=200, blank=False, null=False)
     description = models.CharField('Descrição', max_length=1000, blank=False, null=False)
@@ -32,7 +32,7 @@ class Unity(Base):
 
 
 class Pharmacy(Base):
-    id = models.IntegerField(primary_key=True, null=False, blank=False)
+    id = models.AutoField(primary_key=True, null=False, blank=False)
     unity = models.ForeignKey(Unity, verbose_name='Unidade', on_delete=models.CASCADE, blank=False, null=False)
     name = models.CharField('Nome', max_length=200, blank=False, null=False)
     description = models.CharField('Descrição', max_length=1000, blank=False, null=False)
@@ -46,7 +46,7 @@ class Pharmacy(Base):
 
 
 class MedicationType(models.Model):
-    id = models.IntegerField(primary_key=True, null=False, blank=False)
+    id = models.AutoField(primary_key=True, null=False, blank=False)
     name = models.CharField('Nome', max_length=200, blank=False, null=False)
     use_range = models.IntegerField('Demanda', blank=False, null=False)
     price_rage = models.DecimalField('Faixa de Preço', max_digits=10, decimal_places=2, null=False, blank=False)
@@ -61,13 +61,11 @@ class MedicationType(models.Model):
 
 
 class Medication(Base):
-    id = models.IntegerField(primary_key=True, null=False, blank=False)
+    id = models.AutoField(primary_key=True, null=False, blank=False)
     type = models.ForeignKey(MedicationType, verbose_name='Categoria', on_delete=models.SET_NULL, blank=True, null=True)
-    pharmacy = models.ForeignKey(Pharmacy, verbose_name='Farmácia', on_delete=models.CASCADE, blank=False, null=False)
     name = models.CharField('Nome', max_length=200, blank=False, null=False)
     description = models.CharField('Descrição', max_length=1000, blank=False, null=False)
     price = models.DecimalField('Preço', max_digits=10, decimal_places=2, null=False, blank=False)
-    quantity = models.IntegerField('Quantidade', null=False, blank=False)
 
     def __str__(self):
         return self.name
@@ -75,6 +73,20 @@ class Medication(Base):
     class Meta:
         verbose_name = 'Medicamento'
         verbose_name_plural = 'Medicamentos'
+
+
+class Inventory(Base):
+    id = models.AutoField(primary_key=True, null=False, blank=False)
+    pharmacy = models.ForeignKey(Pharmacy, verbose_name='Farmácia', on_delete=models.CASCADE, blank=False, null=False)
+    medication = models.ForeignKey(Medication, verbose_name='Medicação', on_delete=models.CASCADE, blank=False, null=False)
+    quantity = models.IntegerField('Quantidade', blank=False, null=False, default=0)
+
+    def __str__(self):
+        return f'{self.medication.name} - {self.quantity} - {self.date_edited}'
+
+    class Meta:
+        verbose_name = 'Estoque'
+        verbose_name_plural = 'Estoques'
 
 
 class Reviewer(Base):

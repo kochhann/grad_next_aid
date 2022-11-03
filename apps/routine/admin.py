@@ -5,7 +5,8 @@ from .models import (
     Pharmacy,
     MedicationType,
     Medication,
-    Reviewer
+    Reviewer,
+    Inventory
 )
 
 
@@ -31,8 +32,14 @@ class MedicationTypeAdmin(admin.ModelAdmin):
 
 @admin.register(Medication)
 class MedicationAdmin(admin.ModelAdmin):
-    list_display = ['name', 'type', 'pharmacy']
+    list_display = ['name', 'type']
     list_filter = ['type']
+
+
+@admin.register(Inventory)
+class InventoryAdmin(admin.ModelAdmin):
+    list_display = ['medication', 'quantity']
+    list_filter = ['pharmacy']
 
 
 @admin.register(Reviewer)

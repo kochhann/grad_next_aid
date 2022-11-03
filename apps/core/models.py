@@ -24,7 +24,7 @@ class Company(Base):
     nickname = models.CharField('Nome Fantasia', max_length=200, blank=False, null=False)
     city = models.CharField('Cidade', max_length=200, blank=False, null=False)
     state = models.CharField('Estado', max_length=2, blank=False, null=False)
-    address = models.BooleanField('Endereço', default=False)
+    address = models.CharField('Endereço', max_length=300, blank=False, null=False)
 
     def __str__(self):
         return self.nickname
